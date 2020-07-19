@@ -30,12 +30,10 @@ jobs:
       with:
         cmd: install
     
-    
-    - name: isntall web socket
-      run: npm install websocket-extensions
+   
     
     - name: install web3
-      run: npm install --save web3 
+      run: npm install --save web3@0.1.4
     
     - name: Build React App
       run: yarn build
