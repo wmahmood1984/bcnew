@@ -31,14 +31,7 @@ jobs:
         cmd: install
     
    
-    - name: Install web3
-      uses: actions/setup-web3
-      with:
-        web3-version: 0.1.4
-        
-    - uses: borales/actions-web3
-      with:
-        cmd: install
+
     
     
     - name: Build React App
