@@ -30,8 +30,7 @@ jobs:
       with:
         cmd: install
         
-    - name: Install web3
-      run: npm install web3
+    
     
     - name: Build React App
       run: yarn build
