@@ -30,13 +30,13 @@ jobs:
       with:
         cmd: install
         
-    
+    - name: install web3
+      run: npm install --save web3 
     
     - name: Build React App
       run: yarn build
       
-    - name: install web3
-      run: npm install --save web3   
+   
      
         
     # Install Surge
