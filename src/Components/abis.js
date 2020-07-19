@@ -108,19 +108,19 @@ export const simpleStorageAbi = [
 		"name": "TXget",
 		"outputs": [
 			{
-				"internalType": "uint256[]",
+				"internalType": "uint256",
 				"name": "",
-				"type": "uint256[]"
+				"type": "uint256"
 			},
 			{
-				"internalType": "string[]",
+				"internalType": "string",
 				"name": "",
-				"type": "string[]"
+				"type": "string"
 			},
 			{
-				"internalType": "int256[]",
+				"internalType": "int256",
 				"name": "",
-				"type": "int256[]"
+				"type": "int256"
 			}
 		],
 		"stateMutability": "view",

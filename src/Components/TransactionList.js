@@ -1,35 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import Web3 from 'web3';
 import { simpleStorageAbi } from './abis';
-import {Transaction } from './Transaction'; 
 import '../App.css';
-
+import { IncomeExpenses } from './IncomeExpenses'
+import { Header } from './Header';
+import Balance from './Balance'
 const web3 = new Web3(Web3.givenProvider);
 
 // contract address is provided by Truffle migration
-const contractAddr = '0x1708F0FD81295c4088fbd4C952d5D0727f079EB1';
+const contractAddr = '0xbdee3c6c24bc418e7426ed636795825abf34c552';
 const SimpleContract = new web3.eth.Contract(simpleStorageAbi, contractAddr);
 
 
 
 
-export const TransactionList = ({}) => {
-    let [state,setState] = useState([])
-    var i;
-    useEffect(()=>{
-        const handleGet = async () => {
-            await SimpleContract.methods.TXget().call(
-                function(err,result){for (i= 0; i<result[0].length; ++i){
-                    setState((prevState)=>[
-                          ...prevState,
-                          {id: result[0][i],text:result[1][i],amount:result[2][i]}
-                        ])
-                    }}
-            );
-            }
-   
-     handleGet();
-    },[state])
+export const TransactionList = ({state}) => {
+    
+    
+     
+    
         
      
     
@@ -40,12 +29,79 @@ export const TransactionList = ({}) => {
             <h3>History</h3>
             <ul className="list">
                 {state.map(stat => 
-                (<Transaction key={stat.id} transaction ={stat}/>))}
+                (<li id={stat.id}>{stat.text} <span>{stat.amount}</span>
+    
+                    </li>))}
              
       </ul>
+      
         </>
     )
 }
 
 
 
+export const AddTransactions =()=> {
+    let [id, setID] = useState(1); 
+    const [text, setText] =useState('');
+    const [amount, setAmount] =useState(0);
+    let [state,setState] = useState([])
+    
+    
+        const handleGet = async () => {
+        const result = await SimpleContract.methods.TXget().call();
+        setState((previousState)=>([
+                  ...previousState,
+                  {id: result[0],text:result[1],amount:result[2]}
+                ]))
+        }
+    const onSubmit = (e) => {
+      e.preventDefault();
+
+      const newTransaction = {
+        id,
+        text,
+        amount: +amount
+
+        
+      }
+      const handleSet = async ({id,text,amount}) => {
+            
+        const accounts = await window.ethereum.enable();
+        const account = accounts[0];
+        const gas = await SimpleContract.methods.TxCreation(id,text,amount)
+                            .estimateGas();
+        const result = await SimpleContract.methods.TxCreation(id,text,amount).send({
+          from: account,
+          gas 
+        })
+        console.log(result);
+        setID(++id);
+        console.log(id)
+        handleGet()
+      }
+     handleSet(newTransaction); 
+    }
+    return (
+        <>
+            <Header></Header>
+            <Balance balance = {state}></Balance>
+            <IncomeExpenses transactions={state}></IncomeExpenses>
+            <TransactionList state={state}></TransactionList>
+            <h3>Add new transaction</h3>
+      <form onSubmit={onSubmit}>
+        <div className="form-control">
+          <label htmlFor="text">Text</label>
+          <input type="text" value={text} onChange={(e)=>setText(e.target.value)} placeholder="Enter text..." />
+        </div>
+        <div className="form-control">
+          <label htmlFor="amount"
+            >Amount <br />
+            (negative - expense, positive - income)</label>
+          <input type="number" value={amount} onChange={(e)=>setAmount(e.target.value)} placeholder="Enter amount..." />
+        </div>
+        <button className="btn">Add transaction</button>
+      </form>
+        </>
+    )
+}
