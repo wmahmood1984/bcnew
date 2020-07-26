@@ -8,7 +8,7 @@ import Balance from './Balance'
 const web3 = new Web3(Web3.givenProvider);
 
 // contract address is provided by Truffle migration
-const contractAddr = '0xbdee3c6c24bc418e7426ed636795825abf34c552';
+const contractAddr = '0x0269316ff750456cb4b3a05d273a548349fbabaf';
 const SimpleContract = new web3.eth.Contract(simpleStorageAbi, contractAddr);
 
 
